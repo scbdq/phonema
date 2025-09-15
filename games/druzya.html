@@ -4,27 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Друзья</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Shantell+Sans:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="SHA512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Друзья</h1>
-            <p>Определите, одинаковые имена у друзей или разные.</p>
-        </header>
-        <main>
-            <div class="friends">
-                <p>Имя 1: Саша</p>
-                <p>Имя 2: Маша</p>
-            </div>
-            <div class="buttons">
-                <button><i class="fas fa-check"></i> Одинаковые</button>
-                <button><i class="fas fa-times"></i> Разные</button>
-            </div>
-        </main>
-    </div>
-    <script src="../js/script.js"></script>
+<div class="game-shell">
+    <header>
+        <a class="back-link" href="../index.html">← На главную</a>
+        <h1 class="game-title">Друзья</h1>
+        <p class="game-subtitle">Слушайте имена двух ребят и решайте, одинаково ли они звучат. Нажмите на нужную кнопку или на карточку, чтобы услышать имя ещё раз.</p>
+        <div class="progress-indicator" id="progress">Раунд 1 из 1</div>
+    </header>
+    <main class="game-main">
+        <div class="card-grid two" id="friends-grid">
+            <button class="word-card" id="first-child" type="button">
+                <span class="emoji" aria-hidden="true">🧒</span>
+                <strong id="first-name">Толя</strong>
+            </button>
+            <button class="word-card" id="second-child" type="button">
+                <span class="emoji" aria-hidden="true">👦</span>
+                <strong id="second-name">Коля</strong>
+            </button>
+        </div>
+        <div class="controls-row">
+            <button id="play-names" class="btn btn-ghost" type="button">▶️ Озвучить имена</button>
+        </div>
+        <div class="controls-row">
+            <button id="btn-same" class="btn btn-primary" type="button">Имена одинаковые</button>
+            <button id="btn-different" class="btn btn-secondary" type="button">Имена разные</button>
+        </div>
+    </main>
+    <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+</div>
+<script src="../js/common.js"></script>
+<script src="../js/druzya.js"></script>
 </body>
 </html>
