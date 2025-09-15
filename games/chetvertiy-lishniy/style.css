@@ -1,0 +1,4 @@
+#game-chetvertiy{ padding:20px; width:min(1000px,94vw); }
+.ch-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; margin:12px 0 10px; }
+.ch-card{ background:var(--blue-300); border-radius:16px; height:140px; display:flex; align-items:center; justify-content:center; font-size:56px; cursor:pointer; }
+.ch-feedback{ min-height:24px; font-weight:700; }

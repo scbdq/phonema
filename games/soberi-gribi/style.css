@@ -1,0 +1,8 @@
+#game-gribi{ padding:20px; width:min(1000px,94vw); }
+.gb-field{ display:grid; grid-template-columns: 2fr 1fr; gap:16px; }
+.gb-mushrooms{ display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; }
+.gb-mushroom{ background:var(--blue-300); border-radius:14px; height:100px; display:flex; justify-content:center; align-items:center; font-size:48px; cursor:grab; }
+.gb-baskets{ display:grid; gap:12px; }
+.gb-basket{ background:var(--pink-300); border-radius:14px; min-height:120px; display:flex; align-items:center; justify-content:center; font-weight:700; outline: 3px dashed transparent; transition: outline-color .15s ease; }
+.gb-basket.dragover{ outline-color: #6ee7b7; }
+.gb-feedback{ min-height:24px; font-weight:700; }

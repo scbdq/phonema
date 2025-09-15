@@ -1,0 +1,6 @@
+#game-druzya{ padding:22px; width:min(900px,92vw); }
+.dr-people{ display:grid; grid-template-columns:1fr 1fr; gap:20px; justify-items:center; margin: 10px 0 20px; }
+.dr-avatar{ font-size:72px; }
+.dr-name{ margin-top:6px; padding:8px 12px; border-radius:10px; background:var(--pink-300); font-weight:700; }
+.dr-controls{ display:flex; gap:12px; justify-content:center; }
+.dr-feedback{ min-height:24px; font-weight:700; }

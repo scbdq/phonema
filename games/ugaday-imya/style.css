@@ -1,0 +1,5 @@
+#game-ui{ padding:20px; width:min(800px,92vw); }
+.ui-aliens{ display:flex; gap:20px; justify-content:center; margin:12px 0; }
+.ui-alien{ font-size:20px; background:var(--violet-300); min-width: 160px; height: 120px; display:flex; align-items:center; justify-content:center; gap:6px; flex-direction:column; }
+.ui-alien small{ opacity:0.8; font-weight:600; }
+.ui-feedback{ min-height:24px; font-weight:700; }

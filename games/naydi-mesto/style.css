@@ -1,0 +1,6 @@
+#game-naydi-mesto{ padding:20px; width:min(800px,92vw); }
+.nm-top{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px; }
+.nm-bottom{ display:flex; justify-content:center; }
+.nm-card{ background:var(--blue-300); border-radius:16px; height:140px; display:flex; align-items:center; justify-content:center; font-size:56px; cursor:pointer; }
+.nm-card.big{ width: 70%; height: 180px; background: var(--pink-300); }
+.nm-feedback{ min-height:24px; font-weight:700; }

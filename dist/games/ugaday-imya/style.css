@@ -1,0 +1,1 @@
+#game-ui{width:min(800px,92vw);padding:20px}.ui-aliens{justify-content:center;gap:20px;margin:12px 0;display:flex}.ui-alien{background:var(--violet-300);flex-direction:column;justify-content:center;align-items:center;gap:6px;min-width:160px;height:120px;font-size:20px;display:flex}.ui-alien small{opacity:.8;font-weight:600}.ui-feedback{min-height:24px;font-weight:700}

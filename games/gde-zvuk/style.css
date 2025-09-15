@@ -1,0 +1,5 @@
+#game-gzv{ padding:20px; width:min(900px,94vw); }
+.gzv-train{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.gzv-wagon{ background:var(--pink-300); border-radius:14px; min-height:120px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+.gzv-card{ background:var(--blue-300); border-radius:14px; height:120px; width:200px; display:flex; align-items:center; justify-content:center; font-size:48px; margin: 14px auto; cursor:grab; }
+.gzv-feedback{ min-height:24px; font-weight:700; }
