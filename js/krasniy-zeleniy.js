@@ -1,130 +1,164 @@
-// DOM элементы
-const objectImage = document.getElementById('object-image');
-const greenButton = document.getElementById('green-button');
-const redButton = document.getElementById('red-button');
-const resultMessage = document.getElementById('result-message');
+const {
+  speak,
+  wait,
+  shuffle,
+  setFeedback,
+  updateProgress,
+  disableButtons,
+  enableButtons,
+  cancelSpeech,
+  initSpeechWarmup,
+} = window.GameUtils;
 
-// Звуки обратной связи (по желанию)
-const correctSound = new Audio('../sounds/krasniy-zeleniy/correct.mp3');
-const incorrectSound = new Audio('../sounds/krasniy-zeleniy/incorrect.mp3');
+const objectCard = document.getElementById('object-card');
+const emojiSpan = objectCard.querySelector('.emoji');
+const objectName = document.getElementById('object-name');
+const repeatButton = document.getElementById('repeat-word');
+const correctButton = document.getElementById('answer-correct');
+const incorrectButton = document.getElementById('answer-incorrect');
+const feedback = document.getElementById('feedback');
+const progress = document.getElementById('progress');
 
-// Данные игры
-const gameData = [
-    {
-        image: "../images/krasniy-zeleniy/banana.png",
-        correctWord: "банан",
-        wrongWords: ["кабан", "наган", "ладан", "набан"]
-    },
-    {
-        image: "../images/krasniy-zeleniy/apple.png",
-        correctWord: "яблоко",
-        wrongWords: ["яблако", "яблока"]
-    },
-    {
-        image: "../images/krasniy-zeleniy/pear.png",
-        correctWord: "груша",
-        wrongWords: ["гуша", "груза", "груся"]
-    }
-    // Добавляй свои карточки
+initSpeechWarmup();
+
+const objects = [
+  {
+    title: 'Банан',
+    emoji: '🍌',
+    sequence: [
+      { word: 'кабан', correct: false },
+      { word: 'наган', correct: false },
+      { word: 'банан', correct: true },
+      { word: 'ладан', correct: false },
+      { word: 'банан', correct: true },
+      { word: 'набан', correct: false },
+      { word: 'банан', correct: true },
+      { word: 'казан', correct: false },
+    ],
+  },
+  {
+    title: 'Будка',
+    emoji: '🐶',
+    sequence: [
+      { word: 'будка', correct: true },
+      { word: 'дудка', correct: false },
+      { word: 'утка', correct: false },
+      { word: 'будка', correct: true },
+      { word: 'буква', correct: false },
+      { word: 'будка', correct: true },
+      { word: 'куртка', correct: false },
+      { word: 'будка', correct: true },
+    ],
+  },
+  {
+    title: 'Панама',
+    emoji: '👒',
+    sequence: [
+      { word: 'фанама', correct: false },
+      { word: 'катама', correct: false },
+      { word: 'панама', correct: true },
+      { word: 'томана', correct: false },
+      { word: 'самана', correct: false },
+      { word: 'вадама', correct: false },
+      { word: 'панама', correct: true },
+      { word: 'напама', correct: false },
+    ],
+  },
 ];
 
-// Внутренние переменные
+const rounds = shuffle(objects).flatMap(item =>
+  item.sequence.map(step => ({
+    ...step,
+    title: item.title,
+    emoji: item.emoji,
+  })),
+);
+
 let currentIndex = 0;
-let isCurrentWordCorrect = true; // Будет true если в этот раз проигран правильный вариант
-let currentWord = "";
+let score = 0;
+let isFinished = false;
 
-// Перемешивание данных (чтобы круг был случайным)
-function shuffleArray(array) {
-    return array.map(value => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ value }) => value);
-}
-
-// Инициализация игры
-let questions = shuffleArray(gameData);
-showRound();
+const buttons = [repeatButton, correctButton, incorrectButton];
 
 function showRound() {
-    // Берем текущий вопрос
-    const data = questions[currentIndex];
+  if (currentIndex >= rounds.length) {
+    finishGame();
+    return;
+  }
 
-    // Показываем картинку
-    objectImage.src = data.image;
-    objectImage.alt = data.correctWord;
-
-    // Решаем, правильный или неправильный вариант аудио будет
-    if (Math.random() < 0.5) {
-        // Правильный
-        isCurrentWordCorrect = true;
-        currentWord = data.correctWord;
-    } else {
-        // Неправильный
-        isCurrentWordCorrect = false;
-        const wrongs = data.wrongWords;
-        currentWord = wrongs[Math.floor(Math.random() * wrongs.length)];
-    }
-
-    // Проигрываем слово (через аудиофайл или синтез речи)
-    playWord(currentWord);
-
-    // Очищаем текст обратной связи
-    resultMessage.textContent = "";
-    resultMessage.className = "";
+  const round = rounds[currentIndex];
+  emojiSpan.textContent = round.emoji;
+  objectName.textContent = round.title;
+  updateProgress(progress, currentIndex + 1, rounds.length);
+  setFeedback(feedback, 'Слушайте слово и выберите ответ.', 'info');
+  enableButtons(buttons);
+  playCurrentWord();
 }
 
-// Воспроизведение слова
-function playWord(word) {
-    const audioPath = `../sounds/krasniy-zeleniy/${word}.mp3`;
-
-    fetch(audioPath, {method:"HEAD"}).then(res => {
-        if(res.ok) {
-            let audio = new Audio(audioPath);
-            audio.play();
-        } else {
-            speakWord(word);
-        }
-    }).catch(() => {
-        speakWord(word);
-    });
+function playCurrentWord() {
+  const round = rounds[currentIndex];
+  cancelSpeech();
+  speak(round.word, { rate: 1.05, pitch: round.correct ? 1.1 : 0.95 });
 }
 
-// Озвучка, если нет файла
-function speakWord(word) {
-    if ('speechSynthesis' in window) {
-        let u = new SpeechSynthesisUtterance(word);
-        u.lang = 'ru-RU';
-        u.rate = 1.05;
-        u.pitch = 1.18;
-        window.speechSynthesis.speak(u);
-    }
+async function checkAnswer(isCorrectAnswer) {
+  if (isFinished) return;
+  disableButtons(buttons);
+  const round = rounds[currentIndex];
+  const isRight = isCorrectAnswer === round.correct;
+  if (isRight) {
+    score += 1;
+    setFeedback(feedback, 'Отлично! Вы услышали правильно.', 'success');
+  } else {
+    const hint = round.correct ? 'Это слово было произнесено верно.' : 'В слове была ошибка.';
+    setFeedback(feedback, `Почти! ${hint}`, 'error');
+  }
+
+  currentIndex += 1;
+  await wait(1300);
+  if (currentIndex < rounds.length) {
+    showRound();
+  } else {
+    finishGame();
+  }
 }
 
-// Проверка ответа пользователя
-function checkAnswer(userThinksCorrect) {
-    greenButton.disabled = true;
-    redButton.disabled = true;
-
-    let isCorrect = (userThinksCorrect === isCurrentWordCorrect);
-
-    if (isCorrect) {
-        resultMessage.textContent = "Верно! 👍";
-        resultMessage.className = "correct";
-        correctSound && correctSound.play();
-    } else {
-        resultMessage.textContent = "Неверно! 👎";
-        resultMessage.className = "incorrect";
-        incorrectSound && incorrectSound.play();
-    }
-
-    // Следующий вопрос через 1.5 сек
-    setTimeout(() => {
-        currentIndex = (currentIndex + 1) % questions.length;
-        showRound();
-        greenButton.disabled = false;
-        redButton.disabled = false;
-    }, 1500);
+function finishGame() {
+  isFinished = true;
+  updateProgress(progress, rounds.length, rounds.length);
+  emojiSpan.textContent = '⭐️';
+  objectName.textContent = 'Вы большие молодцы!';
+  setFeedback(
+    feedback,
+    `Игра завершена! Правильных ответов: ${score} из ${rounds.length}. Нажмите «Сыграть снова», чтобы повторить.`,
+    'success',
+  );
+  repeatButton.textContent = '🔁 Сыграть снова';
+  repeatButton.disabled = false;
+  correctButton.disabled = true;
+  incorrectButton.disabled = true;
 }
 
-// Обработчики кликов
-greenButton.onclick = () => checkAnswer(true);
-redButton.onclick = () => checkAnswer(false);
+repeatButton.addEventListener('click', () => {
+  if (isFinished) {
+    restartGame();
+  } else {
+    playCurrentWord();
+  }
+});
+
+correctButton.addEventListener('click', () => checkAnswer(true));
+incorrectButton.addEventListener('click', () => checkAnswer(false));
+
+function restartGame() {
+  currentIndex = 0;
+  score = 0;
+  isFinished = false;
+  rounds.splice(0, rounds.length, ...shuffle(objects).flatMap(item =>
+    item.sequence.map(step => ({ ...step, title: item.title, emoji: item.emoji })),
+  ));
+  repeatButton.textContent = '🔁 Послушать ещё раз';
+  showRound();
+}
+
+showRound();

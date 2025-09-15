@@ -4,24 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Приветствие</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Shantell+Sans:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="SHA512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Приветствие</h1>
-            <p>Поприветствуйте инопланетянина, когда услышите "до-ду".</p>
-        </header>
-        <main>
-            <img src="../images/privetstvie/alien.png" alt="Инопланетянин">
-           </div>
-            <div class="buttons">
-                <button><i class="fas fa-bell"></i> Слушать </button>
-            </div>
-        </main>
-    </div>
-    <script src="../js/script.js"></script>
+<div class="game-shell">
+    <header>
+        <a class="back-link" href="../index.html">← На главную</a>
+        <h1 class="game-title">Приветствие</h1>
+        <p class="game-subtitle">Слушайте слоговые пары и поприветствуйте гостя, когда услышите его секретное приветствие.</p>
+        <div class="progress-indicator" id="progress">Раунд 1 из 1</div>
+    </header>
+    <main class="game-main">
+        <div class="object-card">
+            <span class="emoji" aria-hidden="true">👽</span>
+            <strong>Приветствие инопланетянина:</strong>
+            <span id="target-greeting" style="font-size:1.6rem; font-weight:700;">до-ду</span>
+        </div>
+        <div class="object-card" id="current-row-card">
+            <span class="emoji" aria-hidden="true">🔊</span>
+            <strong>Сейчас звучит:</strong>
+            <span id="current-row">—</span>
+        </div>
+        <div class="controls-row">
+            <button id="play-rows" class="btn btn-ghost" type="button">▶️ Начать прослушивание</button>
+            <button id="greet-button" class="btn btn-primary" type="button" disabled>👋 Поприветствовать</button>
+        </div>
+    </main>
+    <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+</div>
+<script src="../js/common.js"></script>
+<script src="../js/privetstvie.js"></script>
 </body>
 </html>

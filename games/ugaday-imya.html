@@ -4,27 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Угадай имя</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Shantell+Sans:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="SHA512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Угадай имя</h1>
-            <p>Определите мягкое имя инопланетянина.</p>
-        </header>
-        <main>
-            <div class="items">
-             <img src="../images/ugaday-imya/alien1.png" alt="alien1">
-             <img src="../images/ugaday-imya/alien2.png" alt="alien2">
-            </div>
-            <div class="buttons">
-                <button><i class="fas fa-volume-up"></i>Па</button>
-                <button><i class="fas fa-volume-up"></i>Пя</button>
-            </div>
-        </main>
-    </div>
-    <script src="../js/script.js"></script>
+<div class="game-shell">
+    <header>
+        <a class="back-link" href="../index.html">← На главную</a>
+        <h1 class="game-title">Угадай имя</h1>
+        <p class="game-subtitle">Послушайте, как звучит пара слогов. Нажмите на имя младшего брата-инопланетянина с мягким звучанием.</p>
+        <div class="progress-indicator" id="progress">Раунд 1 из 1</div>
+    </header>
+    <main class="game-main">
+        <div class="card-grid two" id="alien-names">
+            <button class="word-card" id="hard-card" type="button">
+                <span class="emoji" aria-hidden="true">🛸</span>
+                <strong id="hard-text">Па</strong>
+                <span class="tag">Старший брат</span>
+            </button>
+            <button class="word-card" id="soft-card" type="button">
+                <span class="emoji" aria-hidden="true">👾</span>
+                <strong id="soft-text">Пя</strong>
+                <span class="tag">Младший брат</span>
+            </button>
+        </div>
+        <div class="controls-row">
+            <button id="play-syllables" class="btn btn-ghost" type="button">▶️ Проиграть слоги</button>
+        </div>
+    </main>
+    <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+</div>
+<script src="../js/common.js"></script>
+<script src="../js/ugaday-imya.js"></script>
 </body>
 </html>

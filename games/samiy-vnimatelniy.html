@@ -4,29 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Самый внимательный</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Shantell+Sans:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="SHA512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Самый внимательный</h1>
-            <p>Расположите картинки в порядке услышанных слов.</p>
-        </header>
-        <main>
-            <div class="items">
-                <img src="../images/samiy-vnimatelniy/dom.png" alt="Дом">
-                <img src="../images/samiy-vnimatelniy/kot.png" alt="Кот">
-                <img src="../images/samiy-vnimatelniy/les.png" alt="Лес">
-            </div>
-            <div class="slots">
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-            </div>
-        </main>
-    </div>
-    <script src="../js/script.js"></script>
+<div class="game-shell">
+    <header>
+        <a class="back-link" href="../index.html">← На главную</a>
+        <h1 class="game-title">Самый внимательный</h1>
+        <p class="game-subtitle">Слушайте последовательность из трёх слов и расположите карточки в том же порядке.</p>
+        <div class="progress-indicator" id="progress">Раунд 1 из 1</div>
+    </header>
+    <main class="game-main">
+        <div class="drag-container" id="cards-container"></div>
+        <div class="sequence-slots" id="slots"></div>
+        <div class="controls-row">
+            <button id="play-sequence" class="btn btn-ghost" type="button">▶️ Проиграть последовательность</button>
+            <button id="clear-selection" class="btn btn-ghost" type="button">Очистить</button>
+            <button id="check-sequence" class="btn btn-primary" type="button" disabled>Проверить</button>
+        </div>
+    </main>
+    <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+</div>
+<script src="../js/common.js"></script>
+<script src="../js/samiy-vnimatelniy.js"></script>
 </body>
 </html>

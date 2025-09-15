@@ -3,40 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Красный-зеленый</title>
+    <title>Красный–зелёный</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Shantell+Sans:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600&family=Shantell+Sans:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="apple-container">
+<div class="game-shell">
     <header>
-        <h1>
-            <span class="apple-logo"></span>
-            Красный-зеленый
-        </h1>
-        <p class="game-instruction">
-            Слушай слово и нажимай
-            <span class="text-green">зелёную</span> кнопку, если название правильное,<br>
-            <span class="text-red">красную</span> – если неправильное.
-        </p>
+        <a class="back-link" href="../index.html">← На главную</a>
+        <h1 class="game-title">Красный–зелёный</h1>
+        <p class="game-subtitle">Слушайте слово и решайте, верно ли оно произнесено. Нажмите зелёную кнопку, если слово правильное, и розовую, если в нём ошибка.</p>
+        <div class="progress-indicator" id="progress">Раунд 1 из 1</div>
     </header>
-    <main>
-        <div class="apple-image-blur">
-            <img src="../images/krasniy-zeleniy/apple.png" alt="Яблоко" id="object-image">
+    <main class="game-main">
+        <div class="object-card" id="object-card">
+            <span class="emoji" aria-hidden="true">🍏</span>
+            <strong id="object-name">Яблоко</strong>
         </div>
-        <div class="apple-buttons-row">
-            <button id="green-button" class="btn-apple green-apple">
-                <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#34C759"/><path d="M9 14.5l3.5 3.5 6-7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-                Верно
-            </button>
-            <button id="red-button" class="btn-apple red-apple">
-                <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="#FF3B30"/><path d="M10 18l8-8M18 18l-8-8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
-                Неверно
-            </button>
+        <div class="controls-row">
+            <button id="repeat-word" class="btn btn-ghost" type="button">🔁 Послушать ещё раз</button>
         </div>
-        <div id="result-message" class="result-message"></div>
+        <div class="controls-row">
+            <button id="answer-correct" class="btn btn-primary" type="button">Слово верное</button>
+            <button id="answer-incorrect" class="btn btn-secondary" type="button">Слово неверное</button>
+        </div>
     </main>
+    <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
 </div>
+<script src="../js/common.js"></script>
 <script src="../js/krasniy-zeleniy.js"></script>
 </body>
 </html>
