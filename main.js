@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if(window.UI){ UI.clearToasts?.(); UI.clearOverlays?.(); }
         gameContainer.innerHTML = '<div class="loader">Загрузка...</div>';
         gameSpecificStyles.innerHTML = '';
 
@@ -68,7 +69,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ШАГ 1: Сначала вставляем HTML и CSS.
             gameContainer.classList.remove('home');
-            gameContainer.innerHTML = html;
+            const shell = document.createElement('div');
+            shell.className = 'game-shell';
+            shell.innerHTML = `
+              <div class="game-toolbar">
+                <div class="toolbar-left">
+                  <button class="icon-btn" id="btn-back"><span class="iconify" data-icon="solar:arrow-left-linear"></span>Назад</button>
+                </div>
+                <div class="toolbar-right">
+                  <button class="icon-btn" id="btn-restart"><span class="iconify" data-icon="solar:refresh-linear"></span>Сброс</button>
+                </div>
+              </div>
+              <div class="game-stage animate__animated animate__fadeIn">${html}</div>`;
+            gameContainer.innerHTML = '';
+            gameContainer.appendChild(shell);
             gameSpecificStyles.innerHTML = css;
 
             // ШАГ 2: Создаем и выполняем скрипт ПОСЛЕ того, как HTML уже на странице.
@@ -87,6 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // ШАГ 4: Удаляем временный скрипт.
             document.body.removeChild(script);
 
+            // Toolbar actions
+            const backBtn = document.getElementById('btn-back');
+            const restartBtn = document.getElementById('btn-restart');
+            backBtn?.addEventListener('click', (e)=>{ e.preventDefault(); showHomeScreen(); });
+            restartBtn?.addEventListener('click', (e)=>{ e.preventDefault(); loadGame(gameId); });
+
         } catch (error) {
             console.error(`Ошибка при загрузке игры "${game.name}":`, error);
             gameContainer.innerHTML = `<div class="error-message">Не удалось загрузить игру. Проверьте консоль разработчика (F12) для деталей.</div>`;
@@ -95,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // ... (остальные функции showHomeScreen, обработчики событий и вызов createGamesMenu() без изменений)
     function showHomeScreen() {
+        if(window.UI){ UI.clearToasts?.(); UI.clearOverlays?.(); }
         const cards = games.map(g => `
           <div class="home-card card" data-game-id="${g.id}">
             <div class="home-emoji">${g.emoji || '🎮'}</div>
@@ -104,6 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
         gameSpecificStyles.innerHTML = '';
         gameContainer.classList.add('home');
         const grid = gameContainer.querySelector('.home-grid');
+        // Плавное появление карточек
+        [...grid.children].forEach((card, i)=>{
+            card.classList.add('animate__animated','animate__fadeInUp');
+            card.style.setProperty('--animate-duration','600ms');
+            card.style.animationDelay = `${i*40}ms`;
+        });
         grid.addEventListener('click', (e)=>{
             const card = e.target.closest('.home-card');
             if(card) loadGame(card.dataset.gameId);
@@ -131,4 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
     games.forEach(g => g.emoji = emojiMap[g.id] || '🎮');
 
     createGamesMenu();
+    // Показываем сразу каталог игр
+    showHomeScreen();
 });

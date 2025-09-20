@@ -18,14 +18,19 @@ function initNaydiParu(){
 
   function shuffle(arr){return arr.slice().sort(()=>Math.random()-0.5)}
   function speak(text){ return window.Voice ? window.Voice.speak(text) : ( ()=>{ try{ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='ru-RU'; window.speechSynthesis.speak(u);}catch(e){} } )(); }
-  function render(){ const p=order[idx]; left.textContent=p.icons[0]||'①'; right.textContent=p.icons[1]||'②'; feedback.textContent=''; }
+  function render(){ const p=order[idx]; left.textContent=p.icons[0]||'①'; right.textContent=p.icons[1]||'②'; feedback.textContent=''; if(window.UI) window.UI.clearToasts(); }
   function next(){ idx=(idx+1)%order.length; render(); }
 
   listen.addEventListener('click',()=>{ const p=order[idx]; speak(p.a+' — '+p.b);});
   yesBtn.addEventListener('click',()=>check(true));
   noBtn.addEventListener('click',()=>check(false));
 
-  function check(answer){ const ok = (answer===order[idx].similar); feedback.textContent = ok? 'Верно!':'Попробуй ещё'; feedback.style.color= ok?'#065f46':'#7f1d1d'; setTimeout(next, 900); }
+  function check(answer){
+    const ok = (answer===order[idx].similar);
+    if(window.UI){ UI.toast(ok? 'Верно!':'Попробуй ещё', ok? 'success':'error'); if(ok) UI.celebrate(); }
+    else { feedback.textContent = ok? 'Верно!':'Попробуй ещё'; feedback.style.color= ok?'#065f46':'#7f1d1d'; }
+    setTimeout(next, 900);
+  }
 
   render();
 }

@@ -6,11 +6,16 @@ function initUgadaiImya(){
   const soft=document.getElementById('ui-soft');
   const listen=document.getElementById('ui-listen');
   const speak=t=> window.Voice ? window.Voice.speak(t) : ( ()=>{ try{window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ru-RU'; window.speechSynthesis.speak(u);}catch(e){} } )();
-  function render(){ feedback.textContent=''; }
+  function render(){ feedback.textContent=''; if(window.UI) UI.clearToasts(); }
   function next(){ i=(i+1)%order.length; render(); }
   listen.addEventListener('click',()=>{ const p=order[i]; speak(p[0]); setTimeout(()=>speak(p[1]),500); });
   hard.addEventListener('click',()=>{ check(false); });
   soft.addEventListener('click',()=>{ check(true); });
-  function check(choseSoft){ const ok = choseSoft; feedback.textContent = ok? 'Верно!':'Нет, мягкий — младший'; feedback.style.color= ok?'#065f46':'#7f1d1d'; setTimeout(next,900); }
+  function check(choseSoft){
+    const ok = choseSoft;
+    if(window.UI){ UI.toast(ok? 'Верно!':'Нет, мягкий — младший', ok? 'success':'error'); }
+    else { feedback.textContent = ok? 'Верно!':'Нет, мягкий — младший'; feedback.style.color= ok?'#065f46':'#7f1d1d'; }
+    setTimeout(next,900);
+  }
   render();
 }

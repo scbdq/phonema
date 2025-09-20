@@ -9,4 +9,10 @@ function initRobot(){
   play.addEventListener('click',()=>{ cur.forEach((s,i)=> setTimeout(()=>speak(s), i*500)); });
   buttons.forEach((b,i)=> b.addEventListener('click',()=>{ const ok=i===oddIndex; feedback.textContent= ok? 'Правильно!':'Нет'; feedback.style.color= ok?'#065f46':'#7f1d1d'; setTimeout(()=>{ newRound(); }, 800); }));
   newRound();
+  // Lottie robot
+  try{
+    if(window.lottie){
+      window.lottie.loadAnimation({ container: document.getElementById('rb-lottie'), renderer:'svg', loop:true, autoplay:true, path:'https://assets2.lottiefiles.com/packages/lf20_mvb7c9.json' });
+    }
+  }catch(_){ }
 }

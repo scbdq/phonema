@@ -6,16 +6,19 @@ function initKrasniyZeleniy() {
         {
             word: 'Банан',
             icon: '🍌',
+            image: 'assets/images/krasniy-zeleniy/banan.png',
             sequence: ['кабан','наган','банан','ладан','банан','набан','банан','казан']
         },
         {
             word: 'Будка',
             icon: '🏠',
+            image: 'assets/images/krasniy-zeleniy/budka.png',
             sequence: ['будка','дудка','утка','будка','буква','будка','куртка','будка']
         },
         {
             word: 'Панама',
             icon: '👒',
+            image: 'assets/images/krasniy-zeleniy/panama.png',
             sequence: ['фанама','катама','панама','томана','самана','вадама','панама','напама']
         }
     ];
@@ -26,14 +29,61 @@ function initKrasniyZeleniy() {
     let isCorrectPronunciation = false;
     let lastSpoken = '';
     let isGameActive = false; // Ответы недоступны до нажатия «Слушать»
+    let score = 0;
+    let currentAudio = null;
 
     // --- 3. ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ DOM ---
     const imageContainer = document.getElementById('gz-image-container');
-    const itemWord = document.getElementById('gz-item-word');
+    const itemWord = document.querySelector('.item-word');
+    const itemImage = document.getElementById('gz-item-image');
+    const itemLabel = document.getElementById('gz-item-label');
     const correctButton = document.getElementById('gz-button-correct');
     const incorrectButton = document.getElementById('gz-button-incorrect');
     const listenButton = document.getElementById('gz-listen');
     const feedbackElement = document.getElementById('gz-feedback');
+
+    const audioMap = {
+        'банан': 'banan',
+        'кабан': 'kaban',
+        'наган': 'nagan',
+        'ладан': 'ladan',
+        'набан': 'naban',
+        'казан': 'kazan',
+        'будка': 'budka',
+        'дудка': 'dudka',
+        'утка': 'utka',
+        'буква': 'bukva',
+        'куртка': 'kurtka',
+        'панама': 'panama',
+        'фанама': 'fanama',
+        'катама': 'katana',
+        'томана': 'tomana',
+        'самана': 'sanama',
+        'вадама': 'vadama',
+        'напама': 'napama'
+    };
+
+    function stopAudio(){
+        if(currentAudio){
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            currentAudio = null;
+        }
+    }
+
+    function playPronunciation(word){
+        stopAudio();
+        const key = audioMap[word.toLowerCase()];
+        if(key){
+            const audio = new Audio(`assets/audio/krasniy-zeleniy/${key}.mp3`);
+            currentAudio = audio;
+            audio.play().catch(()=>{
+                if(window.Voice){ window.Voice.speak(word); }
+            });
+        } else if(window.Voice){
+            window.Voice.speak(word);
+        }
+    }
 
     // --- 4. ОСНОВНЫЕ ФУНКЦИИ ---
 
@@ -55,6 +105,8 @@ function initKrasniyZeleniy() {
      * Запускает новый раунд или завершает игру
      */
     function startRound() {
+        if(window.UI) window.UI.clearToasts();
+        stopAudio();
         // Если раунды закончились, завершаем игру
         if (currentRoundIndex >= shuffledData.length) {
             endGame();
@@ -68,8 +120,19 @@ function initKrasniyZeleniy() {
         // Ждем, пока анимация скрытия завершится
         setTimeout(() => {
             const roundData = shuffledData[currentRoundIndex];
-            // Показываем иконку предмета
-            itemWord.textContent = roundData.icon;
+            // Показываем картинку или fallback-иконку
+            if(roundData.image){
+                itemWord.classList.remove('no-image');
+                itemWord.classList.add('has-image');
+                itemImage.src = roundData.image;
+                itemImage.alt = roundData.word;
+                itemLabel.textContent = '';
+            } else {
+                itemWord.classList.remove('has-image');
+                itemWord.classList.add('no-image');
+                itemImage.removeAttribute('src');
+                itemLabel.textContent = roundData.icon || roundData.word;
+            }
 
             // Показываем новую картинку
             imageContainer.classList.add('show');
@@ -95,11 +158,14 @@ function initKrasniyZeleniy() {
         const isPlayerRight = (wasCorrectPressed === isCorrectPronunciation);
 
         if (isPlayerRight) {
-            showFeedback('Правильно!', 'correct');
+            score++;
+            if(window.UI){ UI.toast('Правильно!', 'success'); UI.celebrate(); }
+            else { showFeedback('Правильно!', 'correct'); }
             // Подпрыгивает противоположная кнопка
             incorrectButton.classList.add('hop');
         } else {
-            showFeedback('Неверно', 'incorrect');
+            if(window.UI){ UI.toast('Неверно', 'error'); }
+            else { showFeedback('Неверно', 'incorrect'); }
             correctButton.classList.add('hop');
         }
 
@@ -130,10 +196,26 @@ function initKrasniyZeleniy() {
     /**
      * Завершает игру
      */
+    function resetGame(){
+        currentRoundIndex = 0;
+        score = 0;
+        shuffledData = shuffleArray(gameData);
+        startRound();
+    }
+
     function endGame() {
         imageContainer.classList.remove('show');
-        showFeedback('Молодец!', 'correct');
-        // Здесь можно добавить кнопку "Играть снова"
+        stopAudio();
+        if(window.UI){
+            UI.result({
+                title:'Молодец!',
+                score,
+                total: shuffledData.length,
+                onReplay: resetGame,
+                onClose: resetGame
+            });
+        }
+        else { showFeedback('Молодец!', 'correct'); }
     }
 
     // --- 5. ИНИЦИАЛИЗАЦИЯ ИГРЫ ---
@@ -151,8 +233,7 @@ function initKrasniyZeleniy() {
         lastSpoken = spoken;
         isCorrectPronunciation = (spoken.toLowerCase() === roundData.word.toLowerCase());
         isGameActive = true;
-        if(window.Voice){ window.Voice.speak(spoken); }
-        else { try{ const u=new SpeechSynthesisUtterance(spoken); u.lang='ru-RU'; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); }catch(e){} }
+        playPronunciation(spoken);
     });
 
     // Готовим первый раунд (без автоозвучки)

@@ -11,6 +11,6 @@ function initSoberiGribi(){
   ;[b1,b2].forEach(b=>{
     b.addEventListener('dragover',e=>{ e.preventDefault(); b.classList.add('dragover'); });
     b.addEventListener('dragleave',()=> b.classList.remove('dragover'));
-    b.addEventListener('drop',e=>{ e.preventDefault(); b.classList.remove('dragover'); const s=e.dataTransfer.getData('text/plain'); const el=[...grid.children].find(x=>x.dataset.sound===s)||[...b1.children,...b2.children].find(x=>x.dataset&&x.dataset.sound===s); if(!el) return; const correct = (b.dataset.type==typeOf(s)); b.appendChild(el); feedback.textContent = correct? 'Правильно!' : 'Не та корзина'; feedback.style.color = correct? '#065f46':'#7f1d1d'; });
+    b.addEventListener('drop',e=>{ e.preventDefault(); b.classList.remove('dragover'); const s=e.dataTransfer.getData('text/plain'); const el=[...grid.children].find(x=>x.dataset.sound===s)||[...b1.children,...b2.children].find(x=>x.dataset&&x.dataset.sound===s); if(!el) return; const correct = (b.dataset.type==typeOf(s)); b.appendChild(el); if(window.UI){ UI.toast(correct? 'Правильно!':'Не та корзина', correct? 'success':'error'); } else { feedback.textContent = correct? 'Правильно!' : 'Не та корзина'; feedback.style.color = correct? '#065f46':'#7f1d1d'; } });
   });
 }

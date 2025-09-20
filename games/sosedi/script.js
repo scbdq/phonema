@@ -29,8 +29,8 @@ function initSosedi(){
     if(state.inside.length%2!==0) return; // ждём по два
     const last2=state.inside.slice(-2);
     const ok = pairs.some(p=>p.includes(last2[0]) && p.includes(last2[1]));
-    feedback.textContent = ok? 'Пара собрана!' : 'Не соседи — попробуй другую.';
-    feedback.style.color = ok? '#065f46' : '#7f1d1d';
+    if(window.UI){ UI.toast(ok? 'Пара собрана!':'Не соседи — попробуй другую.', ok? 'success':'error'); if(ok) UI.celebrate(); }
+    else { feedback.textContent = ok? 'Пара собрана!' : 'Не соседи — попробуй другую.'; feedback.style.color = ok? '#065f46' : '#7f1d1d'; }
     if(!ok){ // вернуть назад оба
       last2.forEach(w=>{ const el=[...house.children].find(x=>x.dataset.word===w); if(el){ pool.appendChild(el); state.inside.pop(); }});
     }

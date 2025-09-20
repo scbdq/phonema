@@ -17,9 +17,9 @@ function initDruzya(){
 
   let order=items.slice().sort(()=>Math.random()-0.5), i=0;
   const speak=t=> window.Voice ? window.Voice.speak(t) : ( ()=>{ try{ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ru-RU'; window.speechSynthesis.speak(u);}catch(e){} } )();
-  function render(){ const p=order[i]; nameA.textContent=p[0]; nameB.textContent=p[1]; feedback.textContent=''; }
+  function render(){ const p=order[i]; nameA.textContent=p[0]; nameB.textContent=p[1]; feedback.textContent=''; if(window.UI) UI.clearToasts(); }
   function next(){ i=(i+1)%order.length; render(); }
-  function check(ans){ const ok = ans===order[i][2]; feedback.textContent=ok?'Верно!':'Неверно'; feedback.style.color=ok?'#065f46':'#7f1d1d'; setTimeout(next,900); }
+  function check(ans){ const ok = ans===order[i][2]; if(window.UI){ UI.toast(ok?'Верно!':'Неверно', ok?'success':'error'); if(ok) UI.celebrate(); } else { feedback.textContent=ok?'Верно!':'Неверно'; feedback.style.color=ok?'#065f46':'#7f1d1d'; } setTimeout(next,900); }
   listen.addEventListener('click',()=>{ const p=order[i]; speak(p[0]); setTimeout(()=>speak(p[1]),500); });
   same.addEventListener('click',()=>check(true));
   diff.addEventListener('click',()=>check(false));

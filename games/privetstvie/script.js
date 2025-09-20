@@ -9,6 +9,7 @@ function initPrivetstvie(){
   function newTarget(){ target = rows[Math.floor(Math.random()*rows.length)]; targetEl.textContent=target; }
   function playSequence(){
     playing=true; feedback.textContent=''; counted=false; lastTargetAt=0;
+    if(window.UI) UI.clearToasts();
     const seq = shuffle(rows).slice(0,7);
     seq.forEach((w,i)=> setTimeout(()=>{
       lastSpoken=w; if(w===target){ lastTargetAt=Date.now(); }
@@ -21,9 +22,14 @@ function initPrivetstvie(){
   hit.addEventListener('click',()=>{
     if(!playing || counted) return;
     const ok = lastTargetAt && (Date.now()-lastTargetAt <= 900);
-    feedback.textContent= ok? 'Отлично!':'Не то приветствие';
-    feedback.style.color= ok?'#065f46':'#7f1d1d';
+    if(window.UI){ UI.toast(ok? 'Отлично!':'Не то приветствие', ok? 'success':'error'); }
+    else {
+      feedback.textContent= ok? 'Отлично!':'Не то приветствие';
+      feedback.style.color= ok?'#065f46':'#7f1d1d';
+    }
     counted=true;
   });
   newTarget();
+  // Lottie friendly alien/astronaut
+  try{ if(window.lottie){ window.lottie.loadAnimation({ container: document.getElementById('pv-lottie'), renderer:'svg', loop:true, autoplay:true, path:'https://assets9.lottiefiles.com/temp/lf20_aKAfIn.json' }); } }catch(_){ }
 }
